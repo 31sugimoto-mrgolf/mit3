@@ -3,15 +3,11 @@ async function getMemberByLineId(lineUserId) {
     const url =
       `${APP_CONFIG.GAS_API_URL}?action=getMemberByLineId&lineUserId=${encodeURIComponent(lineUserId)}`;
 
-    console.log('GET member URL:', url);
-
     const response = await fetch(url, {
       method: 'GET'
     });
 
     const text = await response.text();
-    console.log('GET member raw response:', text);
-
     return JSON.parse(text);
   } catch (error) {
     console.error('getMemberByLineId failed:', error);
@@ -22,12 +18,28 @@ async function getMemberByLineId(lineUserId) {
   }
 }
 
+async function getMemberDetailByLineId(lineUserId) {
+  try {
+    const url =
+      `${APP_CONFIG.GAS_API_URL}?action=getMemberDetailByLineId&lineUserId=${encodeURIComponent(lineUserId)}`;
+
+    const response = await fetch(url, {
+      method: 'GET'
+    });
+
+    const text = await response.text();
+    return JSON.parse(text);
+  } catch (error) {
+    console.error('getMemberDetailByLineId failed:', error);
+    return {
+      ok: false,
+      error: error.message || String(error)
+    };
+  }
+}
+
 async function postToGas(action, payload) {
   try {
-    console.log('POST to GAS:', APP_CONFIG.GAS_API_URL);
-    console.log('Action:', action);
-    console.log('Payload:', payload);
-
     const response = await fetch(APP_CONFIG.GAS_API_URL, {
       method: 'POST',
       headers: {
@@ -40,8 +52,6 @@ async function postToGas(action, payload) {
     });
 
     const text = await response.text();
-    console.log('POST raw response:', text);
-
     return JSON.parse(text);
   } catch (error) {
     console.error('postToGas failed:', error);
